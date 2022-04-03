@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="TigerhallKittensModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Tiger">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="DateOfBirth" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'TigerhallKittens.dbo.TigerSighting' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TigerSighting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TigerId" Type="int" />
+          <Property Name="Longitude" Type="float" />
+          <Property Name="Latitude" Type="float" />
+          <Property Name="LastSeenTimeStamp" Type="datetime" />
+        </EntityType>
+        <Association Name="FK__TigerSigh__Tiger__023D5A04">
+          <End Role="Tiger" Type="Self.Tiger" Multiplicity="0..1" />
+          <End Role="TigerSighting" Type="Self.TigerSighting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tiger">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TigerSighting">
+              <PropertyRef Name="TigerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="CreateTiger" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Name" Type="nvarchar" Mode="In" />
+          <Parameter Name="DateOfBirth" Type="datetime" Mode="In" />
+          <Parameter Name="LastSeenTimeStamp" Type="datetime" Mode="In" />
+          <Parameter Name="Latitude" Type="float" Mode="In" />
+          <Parameter Name="Longitude" Type="float" Mode="In" />
+        </Function>
+        <Function Name="CreateTigerSighting" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TigerId" Type="int" Mode="In" />
+          <Parameter Name="Longitude" Type="float" Mode="In" />
+          <Parameter Name="Latitude" Type="float" Mode="In" />
+          <Parameter Name="LastSeenTimeStamp" Type="datetime" Mode="In" />
+          <Parameter Name="FilePath" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="TigerhallKittensModelStoreContainer">
+          <EntitySet Name="Tiger" EntityType="Self.Tiger" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TigerSighting" EntityType="Self.TigerSighting" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [TigerSighting].[Id] AS [Id], 
+    [TigerSighting].[TigerId] AS [TigerId], 
+    [TigerSighting].[Longitude] AS [Longitude], 
+    [TigerSighting].[Latitude] AS [Latitude], 
+    [TigerSighting].[LastSeenTimeStamp] AS [LastSeenTimeStamp]
+    FROM [dbo].[TigerSighting] AS [TigerSighting]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__TigerSigh__Tiger__023D5A04" Association="Self.FK__TigerSigh__Tiger__023D5A04">
+            <End Role="Tiger" EntitySet="Tiger" />
+            <End Role="TigerSighting" EntitySet="TigerSighting" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TigerhallKittensModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Tiger">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="TigerSightings" Relationship="Self.FK__TigerSigh__Tiger__023D5A04" FromRole="Tiger" ToRole="TigerSighting" />
+        </EntityType>
+        <EntityType Name="TigerSighting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TigerId" Type="Int32" />
+          <Property Name="Longitude" Type="Double" />
+          <Property Name="Latitude" Type="Double" />
+          <Property Name="LastSeenTimeStamp" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Tiger" Relationship="Self.FK__TigerSigh__Tiger__023D5A04" FromRole="TigerSighting" ToRole="Tiger" />
+        </EntityType>
+        <Association Name="FK__TigerSigh__Tiger__023D5A04">
+          <End Role="Tiger" Type="Self.Tiger" Multiplicity="0..1" />
+          <End Role="TigerSighting" Type="Self.TigerSighting" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tiger">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TigerSighting">
+              <PropertyRef Name="TigerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbContextTigerhallKittens" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Tigers" EntityType="Self.Tiger" />
+          <EntitySet Name="TigerSightings" EntityType="Self.TigerSighting" />
+          <AssociationSet Name="FK__TigerSigh__Tiger__023D5A04" Association="Self.FK__TigerSigh__Tiger__023D5A04">
+            <End Role="Tiger" EntitySet="Tigers" />
+            <End Role="TigerSighting" EntitySet="TigerSightings" />
+          </AssociationSet>
+          <FunctionImport Name="CreateTiger">
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="DateOfBirth" Mode="In" Type="DateTime" />
+            <Parameter Name="LastSeenTimeStamp" Mode="In" Type="DateTime" />
+            <Parameter Name="Latitude" Mode="In" Type="Double" />
+            <Parameter Name="Longitude" Mode="In" Type="Double" />
+          </FunctionImport>
+          <FunctionImport Name="CreateTigerSighting">
+            <Parameter Name="TigerId" Mode="In" Type="Int32" />
+            <Parameter Name="Longitude" Mode="In" Type="Double" />
+            <Parameter Name="Latitude" Mode="In" Type="Double" />
+            <Parameter Name="LastSeenTimeStamp" Mode="In" Type="DateTime" />
+            <Parameter Name="FilePath" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TigerhallKittensModelStoreContainer" CdmEntityContainer="dbContextTigerhallKittens">
+          <EntitySetMapping Name="Tigers">
+            <EntityTypeMapping TypeName="TigerhallKittensModel.Tiger">
+              <MappingFragment StoreEntitySet="Tiger">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TigerSightings">
+            <EntityTypeMapping TypeName="TigerhallKittensModel.TigerSighting">
+              <MappingFragment StoreEntitySet="TigerSighting">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="TigerId" ColumnName="TigerId" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="LastSeenTimeStamp" ColumnName="LastSeenTimeStamp" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CreateTiger" FunctionName="TigerhallKittensModel.Store.CreateTiger" />
+          <FunctionImportMapping FunctionImportName="CreateTigerSighting" FunctionName="TigerhallKittensModel.Store.CreateTigerSighting" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
